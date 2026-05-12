@@ -12,6 +12,7 @@ dependencies = [
   "Cerebro-Viewer>=0.0.10.5",
   "matplotlib>=3.8",
   "nibabel>=5.2",
+  "nilearn>=0.10",
 ]
 
 [project.scripts]

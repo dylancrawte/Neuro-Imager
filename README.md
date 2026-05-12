@@ -1,8 +1,15 @@
 # Neuro Imaging Personal Project
 
-This repository is primarily a wrapper of [Cerebro_Viewer](https://github.com/sina-mansour/Cerebro_Viewer), with added features:
+This repository is primarily a wrapper of [Cerebro_Viewer](https://github.com/sina-mansour/Cerebro_Viewer), but with additional features!
+ 
+The Cerebro Viewer utilises hcp.gradients.dscalar.nii files, or a CIFTI (Connectivity Informatics Technology Initiative) dense scalar file, to visualise brain anatomy in an interactive 3d viewer using Panda3D. It only accepts .dcscalar.nii files for visualisation.
+
+
+Added features:
 
 1. Side-by-side comparison of two CIFTI dscalar maps on the same template (shared color limits by default).
+
+2. GIFTI .func.gii compatibility for surface level, single hemispheric data visualisation (see GIFTI surface visualisation section below for set up)
 
 ## Quick start
 
@@ -11,9 +18,11 @@ Create a virtual environment and install:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
+pip install -e .
 pip install -U pip setuptools wheel
 pip install -e . --config-settings editable_mode=strict
 ```
+
 
 The `--config-settings editable_mode=strict` line avoids a common **macOS + Python 3.12+** issue where a normal editable install writes a small `.pth` file that **never gets applied**, so `neuro-viewer` exists but `import neuro_imaging_tool` fails. If you prefer not to use an editable install, use `pip install .` instead (package code is copied into the venv; reinstall after edits).
 
@@ -40,6 +49,17 @@ neuro-viewer --bundled-dscalar --offscreen --output brain.png
 **`ModuleNotFoundError: No module named 'neuro_imaging_tool'` when running `neuro-viewer`.**  
 The console script is installed, but Python is not seeing `src/neuro_imaging_tool`. Typical causes: **editable install** used the legacy path-based `.pth` trick, which some environments skip. **Fix:** reinstall with strict editable mode (see Quick start), or run once with `PYTHONPATH=src neuro-viewer ...` from the repo root, or use a non-editable `pip install .`.
 
+If this still does not fix module not found error, try deactivating venv and re booting:
+
+```bash
+deactivate 2>/dev/null || true
+rm -rf .venv
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip setuptools wheel
+python -m pip install -e . --config-settings editable_mode=strict
+```
+
 ## Side-by-side comparison
 
 Render two `.dscalar.nii` files next to each other with the same template and matching color scale (min/max is taken across **both** maps unless you set `--clims`):
@@ -53,6 +73,22 @@ neuro-viewer \
 ```
 
 Optional fixed scale: `--clims -2 2`. Other template options (`--surface`, `--volumetric-structures`) apply to both panels.
+
+## GIFTI surface visualisation
+
+This repo can also make a static PNG from paired **left/right `.func.gii`** surface metric files. This is separate from the Cerebro `--dscalar` workflow: `.func.gii` files hold values on a specific **fsaverage** surface mesh, so you must choose the matching `--mesh` (`fsaverage`, `fsaverage6`, `fsaverage5`, or `fsaverage4`).
+
+```bash
+neuro-viewer \
+  --func-gii-left /path/to/left.func.gii \
+  --func-gii-right /path/to/right.func.gii \
+  --mesh fsaverage5 \
+  --output gifti_surface.png \
+  --title "Gradient 1 (fsaverage5)" \
+  --colormap viridis
+```
+
+The output is a 2x2 figure: left lateral, right lateral, left medial, and right medial, using one shared colour scale across both hemispheres. Add `--clims LOW HIGH` to fix the scale.
 
 ## Colour mapping
 
@@ -73,5 +109,6 @@ Scalar overlays are drawn by [Cerebro](https://cerebro-viewer.readthedocs.io/): 
 ## Layout
 
 - `src/neuro_imaging_tool/viewer.py`: thin wrapper around Cerebro APIs and comparison export
+- `src/neuro_imaging_tool/gifti_viewer.py`: static fsaverage GIFTI surface plotting
 - `src/neuro_imaging_tool/cli.py`: command-line entrypoint
 - `scripts/example.py`: minimal Python usage example

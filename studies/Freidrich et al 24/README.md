@@ -13,9 +13,10 @@ This image is produced with the repository’s **Cerebro** wrapper from the loca
 <tr>
 <td align="center" valign="top" width="62%">
 
+
 <img src="figures/hcp_gradients_cerebro.png" alt="Left hemisphere: principal gradient on HCP cortical mesh (viridis)" width="480"/>
 
-<p><em>Cortical map from <code>hcp.gradients.dscalar.nii</code> — first / default scalar map, <code>viridis</code> overlay on the HCP template (Cerebro export).</em></p>
+<p><em>Cortical map from <code>hcp.gradients.dscalar.nii</code> Visualisation of the principle gradient on the cortical surface.</em></p>
 
 </td>
 <td valign="top" width="38%">
@@ -24,7 +25,7 @@ This image is produced with the repository’s **Cerebro** wrapper from the loca
 
 <p><strong>What the colours show</strong></p>
 
-<p>Each vertex is coloured by its <strong>numeric value</strong> in the loaded map after the viewer’s automatic scaling (<a href="../../README.md#colour-mapping">colour mapping</a> in the main README). This export used <code>--colormap viridis</code> and did not set <code>--clims</code>, so Cerebro rescales the displayed map to the data range in that file.</p>
+<p>Each vertex is coloured by its <strong>numeric value</strong> in the loaded map after the viewer’s automatic scaling (<a href="../../README.md#colour-mapping">colour mapping</a> in the main README). </p>
 
 <p><strong>Typical neuroscientific reading</strong> (Margulies et al., 2016 <em>principal gradient</em>):</p>
 
@@ -74,9 +75,53 @@ MPLBACKEND=Agg neuro-viewer \
   --colormap coolwarm
 ```
 
-Other files under `data/Gradients_Margulies2016/` (`fsaverage/*.gii`, MNI `volumes/*.nii.gz`) are **not** used by these commands; see the main [README](../../README.md) for supported formats.
+## GIFTI fsaverage surface visualisation
 
----
+The files under `data/Gradients_Margulies2016/fsaverage/*.func.gii` are **surface metric** files: they store gradient values on left/right fsaverage meshes. Use this mode when you want to inspect those GIFTI files directly instead of the CIFTI `hcp.gradients.dscalar.nii`.
+
+Example: render gradient 1 on the lighter `fsaverage5` mesh (left/right, lateral/medial views):
+
+```bash
+cd "$(git rev-parse --show-toplevel)"
+
+MPLBACKEND=Agg neuro-viewer \
+  --func-gii-left "studies/Freidrich et al 24/data/Gradients_Margulies2016/fsaverage/hcp.embed.grad_1.L.fsa5.func.gii" \
+  --func-gii-right "studies/Freidrich et al 24/data/Gradients_Margulies2016/fsaverage/hcp.embed.grad_1.R.fsa5.func.gii" \
+  --mesh fsaverage5 \
+  --output "studies/Freidrich et al 24/figures/gradient_1_fsaverage5.png" \
+  --title "Principal gradient 1 (fsaverage5)" \
+  --colormap viridis
+```
+
+Use `fsa4`, `fsa5`, `fsa6`, or `fsa` files with the matching `--mesh fsaverage4`, `--mesh fsaverage5`, `--mesh fsaverage6`, or `--mesh fsaverage`.
+
+## GIFTI output (`gradient_1_fsaverage5.png`)
+
+This figure shows the **cortical principal gradient** used as the starting point in Friedrich, Forkel, and Thiebaut de Schotten (2020), *Mapping the principal gradient onto the corpus callosum*. In that paper, the authors begin with the group-level principal gradient from Margulies et al. (2016), split it into gradient-percentage bands, and then ask where those cortical bands connect through the **corpus callosum**. This PNG shows the **cortical gradient field itself** before that callosal projection step.
+
+Here the same gradient is displayed from a pair of **GIFTI surface metric** files, rather than from the CIFTI file used above. It uses:
+
+- `data/Gradients_Margulies2016/fsaverage/hcp.embed.grad_1.L.fsa5.func.gii`
+- `data/Gradients_Margulies2016/fsaverage/hcp.embed.grad_1.R.fsa5.func.gii`
+
+<img src="figures/gradient_1_fsaverage5.png" alt="Principal gradient 1 on left and right fsaverage5 surfaces: lateral and medial views" width="720"/>
+
+**What this image shows:** each panel is a view of the **fsaverage5 cortical surface**, with gradient values painted onto the mesh.
+
+- **Top left / top right:** lateral (outside) views of the left and right hemispheres.
+- **Bottom left / bottom right:** medial (inside-facing) views of the left and right hemispheres.
+- **Colour bar:** numeric scalar values from the two `.func.gii` files. Yellow is higher, purple is lower, and teal/green is intermediate.
+- **Interpretation in the paper’s terms:** this is the cortical hierarchy that Friedrich et al. project onto callosal anatomy. One end of the gradient corresponds broadly to **unimodal / sensory–motor** cortex, while the other corresponds broadly to **transmodal / default-mode–related** association cortex. The paper uses this gradient not just as a visual map, but as a way to ask how different levels of cortical functional organisation are represented in white-matter connections across the midline.
+
+This view is useful because it shows **both hemispheres and both medial/lateral surfaces** in one static image, making the cortical map closer to the input used for Friedrich et al.’s callosal analysis. It is not an individual participant; it is a group/template surface representation.
+
+## surf.gii files
+
+The files under `data/Gradients_Margulies2016/scripts/standard_mesh_atlases/**/*.surf.gii` are **surface geometry** files. They describe the **shape of a mesh**: where the vertices are and how they are connected into triangles. Some are anatomical-like surfaces; many in this folder are **spherical registration surfaces** used to translate data between coordinate systems such as HCP `fs_LR` and FreeSurfer `fsaverage`.
+
+They are usually **not worth visualising on their own** because they do not contain the gradient values from the paper. A `surf.gii` file is the **blank canvas**, not the paint. If opened by itself, it will show a mesh or sphere, but not the meaningful cortical hierarchy.
+
+In this dataset, the `surf.gii` files are best understood as **conversion and resampling support files**. They help move data between mesh spaces, but the visual result you care about comes from files like `fsaverage/hcp.embed.grad_1.L.fsa5.func.gii` and `fsaverage/hcp.embed.grad_1.R.fsa5.func.gii`.
 
 ## References
 
