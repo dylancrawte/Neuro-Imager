@@ -11,8 +11,11 @@ Create a virtual environment and install:
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -e .
+pip install -U pip setuptools wheel
+pip install -e . --config-settings editable_mode=strict
 ```
+
+The `--config-settings editable_mode=strict` line avoids a common **macOS + Python 3.12+** issue where a normal editable install writes a small `.pth` file that **never gets applied**, so `neuro-viewer` exists but `import neuro_imaging_tool` fails. If you prefer not to use an editable install, use `pip install .` instead (package code is copied into the venv; reinstall after edits).
 
 Launch the interactive viewer with bundled template data:
 
@@ -31,6 +34,11 @@ Save a static PNG (offscreen):
 ```bash
 neuro-viewer --bundled-dscalar --offscreen --output brain.png
 ```
+
+## Troubleshooting
+
+**`ModuleNotFoundError: No module named 'neuro_imaging_tool'` when running `neuro-viewer`.**  
+The console script is installed, but Python is not seeing `src/neuro_imaging_tool`. Typical causes: **editable install** used the legacy path-based `.pth` trick, which some environments skip. **Fix:** reinstall with strict editable mode (see Quick start), or run once with `PYTHONPATH=src neuro-viewer ...` from the repo root, or use a non-editable `pip install .`.
 
 ## Side-by-side comparison
 
@@ -67,4 +75,3 @@ Scalar overlays are drawn by [Cerebro](https://cerebro-viewer.readthedocs.io/): 
 - `src/neuro_imaging_tool/viewer.py`: thin wrapper around Cerebro APIs and comparison export
 - `src/neuro_imaging_tool/cli.py`: command-line entrypoint
 - `scripts/example.py`: minimal Python usage example
-# Neuro-Imager
