@@ -1,32 +1,34 @@
 # Sydnor et al. 2021 - Archetypal S-A Axis
 
-This study folder contains brain-map data for visualising the archetypal sensorimotor-association (S-A) axis from Sydnor et al. (2021). The axis describes a cortical hierarchy running from sensorimotor cortex toward association cortex.
+This study folder contains brain-map data for visualising the **archetypal sensorimotor-association (S-A) axis** from Sydnor et al. (2021). The S-A axis describes a broad cortical hierarchy running from **sensorimotor cortex** toward **association cortex**.
 
-The files were copied from the local `S-A_ArchetypalAxis` repository. Please cite:
+## Data in this folder
 
-Sydnor, V. J., et al. (2021). *Neurodevelopment of the association cortices: Patterns, mechanisms, and implications for psychopathology*. Neuron. https://doi.org/10.1016/j.neuron.2021.06.016
-
-The source repository did not include a local license file, so keep the citation and provenance with any redistributed figures or data.
-
-## Data
-
-Main S-A axis brain maps:
+This local copy contains the S-A axis in two formats:
 
 - `data/FSLRVertex/SensorimotorAssociation_Axis.dscalar.nii` - CIFTI dense scalar map for Cerebro rendering.
 - `data/FSaverage5/SensorimotorAssociation_Axis_LH.fsaverage5.func.gii` - left hemisphere fsaverage5 surface metric.
 - `data/FSaverage5/SensorimotorAssociation_Axis_RH.fsaverage5.func.gii` - right hemisphere fsaverage5 surface metric.
 
-Selected comparison maps:
+It also includes selected comparison maps:
 
 - `data/FSLRVertex/T1T2ratio.dscalar.nii` - myelin-sensitive T1w/T2w ratio map.
 - `data/FSLRVertex/Cortical.Thickness.dscalar.nii` - cortical thickness map.
 - `data/FSLRVertex/G1.fMRI.dscalar.nii` - functional connectivity gradient map.
 
-CSV ranking and parcel files are intentionally not copied here for now; this folder is focused on cortical brain visualisations.
+Use the **CIFTI** map for the main Cerebro view and the **GIFTI** files when you want explicit left/right fsaverage5 views.
 
-## CIFTI Visualisation
+## CIFTI visualisation (`sa_axis_cerebro.png`)
 
-Render the S-A axis CIFTI map with Cerebro:
+<img src="figures/sa_axis_cerebro.png" alt="Archetypal S-A axis CIFTI rendered on the HCP cortical template" width="720"/>
+
+**What this image shows:** the S-A axis from `SensorimotorAssociation_Axis.dscalar.nii` rendered on the HCP-style cortical template through Cerebro.
+
+- **Surface:** HCP/CIFTI cortical template, not an individual participant's anatomy.
+- **Colour scale:** numeric values from the dense scalar map. Yellow is higher, purple is lower, and teal/green is intermediate.
+- **Interpretation:** the map captures a broad sensorimotor-to-association cortical hierarchy. The important feature is the continuous axis across cortex; exact high/low biological labels should be checked against the source map polarity.
+
+Reproduce it from the repository root:
 
 ```bash
 cd "$(git rev-parse --show-toplevel)"
@@ -38,9 +40,22 @@ MPLBACKEND=Agg neuro-viewer \
   --colormap viridis
 ```
 
-## GIFTI fsaverage5 Visualisation
+## GIFTI fsaverage5 visualisation (`sa_axis_fsaverage5.png`)
 
-Render both hemispheres on fsaverage5 surfaces:
+<img src="figures/sa_axis_fsaverage5.png" alt="Archetypal S-A axis on left and right fsaverage5 cortical surfaces: lateral and medial views" width="720"/>
+
+This figure uses the two `.func.gii` surface metric files. Each stores one scalar value per cortical surface vertex on the fsaverage5 mesh.
+
+**What this image shows:** the archetypal S-A axis painted onto the left and right **fsaverage5** cortical surfaces.
+
+- **Top left / top right:** lateral (outside) views of the left and right hemispheres.
+- **Bottom left / bottom right:** medial (inside-facing) views of the left and right hemispheres.
+- **Colour bar:** numeric scalar values from the two `.func.gii` files, using one shared scale across both hemispheres.
+- **Interpretation:** this map represents a cortical axis running from **sensorimotor** regions toward **association** regions. The exact biological label for the high or low end depends on the source map's polarity, but the important feature is the continuous gradient across cortical organisation.
+
+This is a **template/group surface visualisation**, not an individual participant's anatomy.
+
+Reproduce it from the repository root:
 
 ```bash
 cd "$(git rev-parse --show-toplevel)"
@@ -54,9 +69,9 @@ MPLBACKEND=Agg neuro-viewer \
   --colormap viridis
 ```
 
-## Suggested Comparison Renders
+## Suggested comparison renders
 
-The copied comparison maps can be rendered individually with the same `--dscalar` workflow. For example:
+The copied comparison maps can be rendered individually with the same CIFTI workflow. For example:
 
 ```bash
 MPLBACKEND=Agg neuro-viewer \
