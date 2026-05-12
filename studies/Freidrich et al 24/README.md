@@ -45,6 +45,27 @@ This image is produced with the repository’s **Cerebro** wrapper from the loca
 
 **Surface geometry:** HCP-style **group cortical mesh** in CIFTI space (Cerebro template), **lateral left hemisphere** — not an individual’s native anatomy.
 
+## GIFTI output (`gradient_1_fsaverage5.png`)
+
+This figure shows the **cortical principal gradient** used as the starting point in Friedrich, Forkel, and Thiebaut de Schotten (2020), *Mapping the principal gradient onto the corpus callosum*. In that paper, the authors begin with the group-level principal gradient from Margulies et al. (2016), split it into gradient-percentage bands, and then ask where those cortical bands connect through the **corpus callosum**. This PNG shows the **cortical gradient field itself** before that callosal projection step.
+
+Here the same gradient is displayed from a pair of **GIFTI surface metric** files, rather than from the CIFTI file used above. It uses:
+
+- `data/Gradients_Margulies2016/fsaverage/hcp.embed.grad_1.L.fsa5.func.gii`
+- `data/Gradients_Margulies2016/fsaverage/hcp.embed.grad_1.R.fsa5.func.gii`
+
+<img src="figures/gradient_1_fsaverage5.png" alt="Principal gradient 1 on left and right fsaverage5 surfaces: lateral and medial views" width="720"/>
+
+**What this image shows:** each panel is a view of the **fsaverage5 cortical surface**, with gradient values painted onto the mesh.
+
+- **Top left / top right:** lateral (outside) views of the left and right hemispheres.
+- **Bottom left / bottom right:** medial (inside-facing) views of the left and right hemispheres.
+- **Colour bar:** numeric scalar values from the two `.func.gii` files. Yellow is higher, purple is lower, and teal/green is intermediate.
+- **Interpretation in the paper’s terms:** this is the cortical hierarchy that Friedrich et al. project onto callosal anatomy. One end of the gradient corresponds broadly to **unimodal / sensory–motor** cortex, while the other corresponds broadly to **transmodal / default-mode–related** association cortex. The paper uses this gradient not just as a visual map, but as a way to ask how different levels of cortical functional organisation are represented in white-matter connections across the midline.
+
+This view is useful because it shows **both hemispheres and both medial/lateral surfaces** in one static image, making the cortical map closer to the input used for Friedrich et al.’s callosal analysis. It is not an individual participant; it is a group/template surface representation.
+
+
 ---
 
 ## Commands (from repository root)
@@ -94,26 +115,6 @@ MPLBACKEND=Agg neuro-viewer \
 ```
 
 Use `fsa4`, `fsa5`, `fsa6`, or `fsa` files with the matching `--mesh fsaverage4`, `--mesh fsaverage5`, `--mesh fsaverage6`, or `--mesh fsaverage`.
-
-## GIFTI output (`gradient_1_fsaverage5.png`)
-
-This figure shows the **cortical principal gradient** used as the starting point in Friedrich, Forkel, and Thiebaut de Schotten (2020), *Mapping the principal gradient onto the corpus callosum*. In that paper, the authors begin with the group-level principal gradient from Margulies et al. (2016), split it into gradient-percentage bands, and then ask where those cortical bands connect through the **corpus callosum**. This PNG shows the **cortical gradient field itself** before that callosal projection step.
-
-Here the same gradient is displayed from a pair of **GIFTI surface metric** files, rather than from the CIFTI file used above. It uses:
-
-- `data/Gradients_Margulies2016/fsaverage/hcp.embed.grad_1.L.fsa5.func.gii`
-- `data/Gradients_Margulies2016/fsaverage/hcp.embed.grad_1.R.fsa5.func.gii`
-
-<img src="figures/gradient_1_fsaverage5.png" alt="Principal gradient 1 on left and right fsaverage5 surfaces: lateral and medial views" width="720"/>
-
-**What this image shows:** each panel is a view of the **fsaverage5 cortical surface**, with gradient values painted onto the mesh.
-
-- **Top left / top right:** lateral (outside) views of the left and right hemispheres.
-- **Bottom left / bottom right:** medial (inside-facing) views of the left and right hemispheres.
-- **Colour bar:** numeric scalar values from the two `.func.gii` files. Yellow is higher, purple is lower, and teal/green is intermediate.
-- **Interpretation in the paper’s terms:** this is the cortical hierarchy that Friedrich et al. project onto callosal anatomy. One end of the gradient corresponds broadly to **unimodal / sensory–motor** cortex, while the other corresponds broadly to **transmodal / default-mode–related** association cortex. The paper uses this gradient not just as a visual map, but as a way to ask how different levels of cortical functional organisation are represented in white-matter connections across the midline.
-
-This view is useful because it shows **both hemispheres and both medial/lateral surfaces** in one static image, making the cortical map closer to the input used for Friedrich et al.’s callosal analysis. It is not an individual participant; it is a group/template surface representation.
 
 ## surf.gii files
 

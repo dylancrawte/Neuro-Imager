@@ -1,15 +1,16 @@
-# Neuro Imaging Personal Project
+# Neuro Imaging Visualisation Workspace
 
-This repository is primarily a wrapper of [Cerebro_Viewer](https://github.com/sina-mansour/Cerebro_Viewer), but with additional features!
- 
-The Cerebro Viewer utilises hcp.gradients.dscalar.nii files, or a CIFTI (Connectivity Informatics Technology Initiative) dense scalar file, to visualise brain anatomy in an interactive 3d viewer using Panda3D. It only accepts .dcscalar.nii files for visualisation.
+This repository is a small workspace for reproducing and exploring **brain anatomy / cortical surface visualisations** from different neuroimaging studies.
 
+The core tool is a Python wrapper around [Cerebro_Viewer](https://github.com/sina-mansour/Cerebro_Viewer), which renders HCP-style **CIFTI dense scalar** files (`*.dscalar.nii`) on a 3D cortical template using Panda3D. Around that core viewer, this repo adds a few practical helpers for study-specific workflows: static exports, side-by-side comparisons, and GIFTI surface plotting.
 
-Added features:
+The [`studies/`](studies/) folder is the workspace for individual papers or datasets. Each study can keep its source data, generated figures, and notes together so the visualisations are easier to reproduce later.
 
-1. Side-by-side comparison of two CIFTI dscalar maps on the same template (shared color limits by default).
+Current added features:
 
-2. GIFTI .func.gii compatibility for surface level, single hemispheric data visualisation (see GIFTI surface visualisation section below for set up)
+1. Side-by-side comparison of two CIFTI dscalar maps on the same template, with shared colour limits by default.
+2. Static PNG export for Cerebro-rendered CIFTI maps.
+3. GIFTI `.func.gii` compatibility for fsaverage surface-level, left/right hemisphere visualisation.
 
 ## Quick start
 
